@@ -6,9 +6,7 @@ use App\Http\Controllers\TicketController;
 use App\Http\Controllers\WidgetTicketController;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::redirect('/', '/admin/tickets');
 
 Route::prefix('widget')
     ->name('widget.')

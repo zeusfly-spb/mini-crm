@@ -1,0 +1,406 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Mini-CRM",
+        "description": "API documentation description",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/": {
+            "servers": [
+                {
+                    "url": "/",
+                    "description": "API server"
+                }
+            ]
+        },
+        "/admin/tickets": {
+            "get": {
+                "tags": [
+                    "Admin Tickets"
+                ],
+                "summary": "Список заявок",
+                "description": "Возвращает HTML-страницу со списком заявок и фильтрами",
+                "operationId": "adminTicketsIndex",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "new",
+                                "pending",
+                                "resolved"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "date_from",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "date_to",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "phone",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "HTML страница списка заявок"
+                    }
+                }
+            }
+        },
+        "/admin/tickets/{ticket}": {
+            "get": {
+                "tags": [
+                    "Admin Tickets"
+                ],
+                "summary": "Карточка заявки",
+                "description": "Возвращает HTML-страницу просмотра конкретной заявки",
+                "operationId": "adminTicketsShow",
+                "parameters": [
+                    {
+                        "name": "ticket",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "HTML страница заявки"
+                    },
+                    "404": {
+                        "description": "Заявка не найдена"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Admin Tickets"
+                ],
+                "summary": "Обновить статус заявки",
+                "description": "Обновляет статус заявки и делает redirect на страницу заявки",
+                "operationId": "adminTicketsUpdate",
+                "parameters": [
+                    {
+                        "name": "ticket",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "status"
+                                ],
+                                "properties": {
+                                    "status": {
+                                        "type": "string",
+                                        "example": "pending",
+                                        "enum": [
+                                            "new",
+                                            "pending",
+                                            "resolved"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "302": {
+                        "description": "Редирект после обновления"
+                    },
+                    "422": {
+                        "description": "Ошибка валидации"
+                    }
+                }
+            }
+        },
+        "/widget": {
+            "get": {
+                "tags": [
+                    "Widget Tickets"
+                ],
+                "summary": "Форма виджета",
+                "description": "Возвращает HTML-страницу формы создания заявки",
+                "operationId": "widgetTicketsFormIndex",
+                "responses": {
+                    "200": {
+                        "description": "HTML страница формы"
+                    }
+                }
+            }
+        },
+        "/widget/tickets/create": {
+            "get": {
+                "tags": [
+                    "Widget Tickets"
+                ],
+                "summary": "Форма виджета (альтернативный путь)",
+                "description": "Возвращает HTML-страницу формы создания заявки",
+                "operationId": "widgetTicketsFormCreate",
+                "responses": {
+                    "200": {
+                        "description": "HTML страница формы"
+                    }
+                }
+            }
+        },
+        "/feedback-widget": {
+            "get": {
+                "tags": [
+                    "Widget Tickets"
+                ],
+                "summary": "Форма обратной связи",
+                "description": "Возвращает HTML-страницу формы обратной связи",
+                "operationId": "feedbackWidgetForm",
+                "responses": {
+                    "200": {
+                        "description": "HTML страница формы"
+                    }
+                }
+            }
+        },
+        "/api/tickets": {
+            "post": {
+                "tags": [
+                    "Widget Tickets"
+                ],
+                "summary": "Создать заявку",
+                "description": "Создание заявки из виджета обратной связи",
+                "operationId": "storeWidgetTicket",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "phone",
+                                    "subject",
+                                    "description"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Иван Иванов",
+                                        "maxLength": 255
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "ivan@example.com",
+                                        "maxLength": 255
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "+79991234567",
+                                        "maxLength": 50
+                                    },
+                                    "subject": {
+                                        "type": "string",
+                                        "example": "Ошибка при сохранении",
+                                        "maxLength": 255
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Не удается отправить форму обратной связи"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Заявка успешно создана",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TicketCreateResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации"
+                    },
+                    "429": {
+                        "description": "Лимит заявок на сутки превышен"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Customer": {
+                "required": [
+                    "id",
+                    "name",
+                    "email",
+                    "phone"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Иван Иванов"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "ivan@example.com"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "example": "+79991234567"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "Ticket": {
+                "required": [
+                    "id",
+                    "customer_id",
+                    "subject",
+                    "description",
+                    "status"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 10
+                    },
+                    "customer_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "subject": {
+                        "type": "string",
+                        "example": "Ошибка при сохранении"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Форма не отправляет данные"
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "new",
+                        "enum": [
+                            "new",
+                            "pending",
+                            "resolved"
+                        ]
+                    },
+                    "reply_date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "customer": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/Customer"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "TicketCreateResponse": {
+                "required": [
+                    "message",
+                    "ticket_id"
+                ],
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Заявка успешно отправлена."
+                    },
+                    "ticket_id": {
+                        "type": "integer",
+                        "example": 10
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Admin Tickets",
+            "description": "Admin Tickets"
+        },
+        {
+            "name": "Widget Tickets",
+            "description": "Widget Tickets"
+        }
+    ]
+}

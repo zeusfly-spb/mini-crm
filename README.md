@@ -15,6 +15,26 @@ cp .env.example .env
 - Виджет: `http://localhost/widget`
 - Альтернативный URL виджета: `http://localhost/feedback-widget`
 
+## Запуск тестов
+
+Полный запуск всех тестов:
+
+```bash
+./vendor/bin/sail artisan test
+```
+
+Запуск только feature-тестов:
+
+```bash
+./vendor/bin/sail artisan test --testsuite=Feature
+```
+
+Запуск конкретного тестового класса:
+
+```bash
+./vendor/bin/sail artisan test --filter=StoreTicketApiTest
+```
+
 ## Тестовые данные
 
 - Менеджер:

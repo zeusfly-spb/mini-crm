@@ -17,7 +17,7 @@ class Ticket extends Model implements HasMedia
 
     public const STATUSES = [
         'new' => 'Новая',
-        'pending' => 'В ожидании',
+        'pending' => 'В обработке',
         'resolved' => 'Решена',
     ];
 
