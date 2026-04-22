@@ -4,7 +4,8 @@
 
 ```bash
 cp .env.example .env
-./vendor/bin/sail up -d
+docker compose up -d
+docker compose exec laravel.test composer install
 ./vendor/bin/sail artisan key:generate
 ./vendor/bin/sail artisan migrate --seed
 ```
@@ -67,4 +68,10 @@ python3 -m http.server 8081
 3) Откройте:
 - внешний сайт: `http://localhost:8081`
 - встроенный в него виджет: `http://localhost/widget`
+
+## Документация по архитектуре
+
+Подробные пояснения по принятым архитектурным и техническим решениям находятся в файле:
+
+- `ARCHITECTURE.md`
 
